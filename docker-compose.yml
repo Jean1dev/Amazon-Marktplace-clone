@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+  rabbitMQ:
+    image: rabbitmq:3-management
+    hostname: "rabbit1"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "HFEWIFHWIUEGHI"
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+    - "15672:15672"
+    - "5672:5672"
+    container_name: rabbit_amazon
+
+  postgreSQL:
+    image: sameersbn/postgresql:10-1
+    ports:
+    - "5432:5432"
+    environment:
+      DB_NAME: produto_core, produto_query, pedido_core, pedido_query, pagamento_core, pagamento_query
+      POSTGRES_USER: "jeanfernandes"
+      POSTGRES_PASSWORD: "admin"
+    volumes:
+      - "./volumes/postgres/:/data/db"
+    container_name: pg_amazon
