@@ -20,8 +20,9 @@ services:
     - "5432:5432"
     environment:
       DB_NAME: produto_core, produto_query, pedido_core, pedido_query, pagamento_core, pagamento_query
-      POSTGRES_USER: "jeanfernandes"
-      POSTGRES_PASSWORD: "admin"
+      DB_USER: "jeanfernandes"
+      DB_PASS: "admin"
+      PG_PASSWORD: "admin"
     volumes:
       - "./volumes/postgres/:/data/db"
     container_name: pg_amazon
