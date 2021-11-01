@@ -1,4 +1,4 @@
-package com.filmes.query.config;
+package com.amazon.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.StdDateFormat;

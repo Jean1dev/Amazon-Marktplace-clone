@@ -3,8 +3,9 @@ package com.amazon.application;
 import com.amazon.AppConfigTest;
 import com.amazon.application.commands.CriarProdutoCommand;
 import com.amazon.produto.model.Produto;
-import com.amazon.produto.model.ProdutoRepository;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,6 @@ public class ProdutoApplicationTest extends AppConfigTest {
 
     @Autowired
     private ProdutoApplication produtoApplication;
-
-    @Autowired
-    private ProdutoRepository repository;
 
     @MockBean
     private RabbitTemplate rabbitTemplate;
