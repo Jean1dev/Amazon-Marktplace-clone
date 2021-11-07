@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.amazon.config.AMQPConstants.GERAR_PAGAMENTO_QUEUE;
 import static com.amazon.config.AMQPConstants.PEDIDO_QUEUE;
 
 @Service
@@ -44,8 +45,13 @@ public class PedidoApplication {
                 .build();
 
         Pedido pedido = repository.save(build);
-        rabbitTemplate.convertAndSend(PEDIDO_QUEUE, pedido);
+        enviarEventos(pedido);
 
         return pedido;
+    }
+
+    private void enviarEventos(Pedido pedido) {
+        rabbitTemplate.convertAndSend(PEDIDO_QUEUE, pedido);
+        rabbitTemplate.convertAndSend(GERAR_PAGAMENTO_QUEUE, pedido);
     }
 }
