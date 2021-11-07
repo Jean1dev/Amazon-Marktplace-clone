@@ -1,5 +1,6 @@
 package com.amazon.application;
 
+import com.amazon.events.event.ProdutoAlteradoEvent;
 import com.amazon.events.event.ProdutoCriadoEvent;
 import com.amazon.produto.model.Produto;
 import com.amazon.produto.model.ProdutoRepository;
@@ -20,6 +21,18 @@ public class ProdutoApplication {
                 .preco(event.getPreco())
                 .imagemUrl(event.getImagemUrl())
                 .nome(event.getNome())
+                .quantidadeEstoqueReservado(event.getQuantidadeEstoqueReservado())
+                .quantidadeEstoqueAtual(event.getQuantidadeEstoqueAtual())
                 .build());
+    }
+
+    public void onChange(ProdutoAlteradoEvent event) {
+        Produto produto = repository.findById(event.getId()).orElseThrow();
+        produto.setPreco(event.getPreco());
+        produto.setImagemUrl(event.getImagemUrl());
+        produto.setNome(event.getNome());
+        produto.setQuantidadeEstoqueReservado(event.getQuantidadeEstoqueReservado());
+        produto.setQuantidadeEstoqueAtual(event.getQuantidadeEstoqueAtual());
+        repository.save(produto);
     }
 }

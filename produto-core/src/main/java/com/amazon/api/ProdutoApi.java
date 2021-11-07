@@ -1,8 +1,10 @@
 package com.amazon.api;
 
 import com.amazon.api.dto.CriarProdutoDto;
+import com.amazon.api.dto.SolicitarAlteracaoEstoqueReservaDto;
 import com.amazon.application.ProdutoApplication;
 import com.amazon.application.commands.CriarProdutoCommand;
+import com.amazon.application.commands.SolicitarAlteracaoEstoqueReservaCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,17 @@ public class ProdutoApi {
                 .preco(dto.getPreco())
                 .nome(dto.getNome())
                 .imagemUrl(dto.getImagemUrl())
+                .quantidadeEstoqueAtual(dto.getQuantidadeEstoqueAtual())
+                .quantidadeEstoqueReservado(dto.getQuantidadeEstoqueReservado())
+                .build());
+    }
+
+    @PostMapping(path = "reservar-estoque")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void reservarEstoque(@RequestBody SolicitarAlteracaoEstoqueReservaDto dto) {
+        application.reservarNoEstoque(SolicitarAlteracaoEstoqueReservaCommand.builder()
+                .idProduto(dto.getIdProduto())
+                .quantidadeReservaEstoque(dto.getQuantidadeReservaEstoque())
                 .build());
     }
 }

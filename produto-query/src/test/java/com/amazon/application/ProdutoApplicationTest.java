@@ -24,7 +24,7 @@ public class ProdutoApplicationTest extends AppConfigTest {
     @DisplayName("deve salvar um produto")
     public void deveSalvar() {
         String id = UUID.randomUUID().toString();
-        ProdutoCriadoEvent event = new ProdutoCriadoEvent(id, "nome", BigDecimal.ONE, null, "imagem");
+        ProdutoCriadoEvent event = new ProdutoCriadoEvent(id, "nome", BigDecimal.ONE, null, "imagem", BigDecimal.ONE, BigDecimal.ONE);
         application.onCreate(event);
         repository.findById(id).ifPresent(produto -> {
             Assertions.assertEquals(id, produto.getId());

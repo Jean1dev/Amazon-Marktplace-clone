@@ -7,6 +7,7 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static com.amazon.config.AMQPConstants.PRODUTO_ALTERADO_QUEUE;
 import static com.amazon.config.AMQPConstants.PRODUTO_QUEUE;
 
 
@@ -23,6 +24,18 @@ public class QueueConfiguration {
     @Bean
     public Queue produtoQ() {
         return new Queue(PRODUTO_QUEUE, true, false, false);
+    }
+
+    @Bean
+    public Queue produtoAlteradoQ() {
+        return new Queue(PRODUTO_ALTERADO_QUEUE, true, false, false);
+    }
+
+    @Bean
+    public Binding produtoAlterado(DirectExchange exchange) {
+        return BindingBuilder.bind(produtoQ())
+                .to(exchange)
+                .with(PRODUTO_ALTERADO_QUEUE);
     }
 
     @Bean

@@ -3,10 +3,7 @@ package com.amazon.api;
 import com.amazon.produto.model.Produto;
 import com.amazon.produto.model.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,4 +21,8 @@ public class ProdutoApi {
         return repository.findAll();
     }
 
+    @GetMapping(path = "{id}")
+    public Produto findById(@PathVariable("id") String id) {
+        return repository.findById(id).orElseThrow();
+    }
 }

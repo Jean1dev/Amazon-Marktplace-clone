@@ -31,6 +31,7 @@ public class ProdutoApplicationTest extends AppConfigTest {
                 .imagemUrl("imagem")
                 .nome("produto teste")
                 .preco(BigDecimal.ONE)
+                .quantidadeEstoqueAtual(1)
                 .build();
 
         Produto produto = produtoApplication.criarProduto(command);

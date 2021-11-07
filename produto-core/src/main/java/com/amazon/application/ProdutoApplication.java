@@ -1,6 +1,7 @@
 package com.amazon.application;
 
 import com.amazon.application.commands.CriarProdutoCommand;
+import com.amazon.application.commands.SolicitarAlteracaoEstoqueReservaCommand;
 import com.amazon.produto.model.Produto;
 import com.amazon.produto.model.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +9,10 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.UUID;
 
+import static com.amazon.config.AMQPConstants.PRODUTO_ALTERADO_QUEUE;
 import static com.amazon.config.AMQPConstants.PRODUTO_QUEUE;
 
 @Service
@@ -27,9 +30,23 @@ public class ProdutoApplication {
                 .imagemUrl(command.getImagemUrl())
                 .nome(command.getNome())
                 .preco(command.getPreco())
+                .quantidadeEstoqueAtual(command.getQuantidadeEstoqueAtual())
+                .quantidadeEstoqueReservado(command.getQuantidadeEstoqueReservado())
                 .build());
 
         rabbitTemplate.convertAndSend(PRODUTO_QUEUE, produto);
         return produto;
+    }
+
+    public void reservarNoEstoque(SolicitarAlteracaoEstoqueReservaCommand command) {
+        Produto produto = repository.findById(command.getIdProduto()).orElseThrow();
+
+        if (Objects.isNull(produto.getQuantidadeEstoqueReservado())) {
+            produto.setQuantidadeEstoqueReservado(0);
+        }
+
+        produto.setQuantidadeEstoqueReservado(produto.getQuantidadeEstoqueReservado() + command.getQuantidadeReservaEstoque());
+        repository.save(produto);
+        rabbitTemplate.convertAndSend(PRODUTO_ALTERADO_QUEUE, produto);
     }
 }
