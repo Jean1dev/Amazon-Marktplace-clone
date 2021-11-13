@@ -67,7 +67,7 @@ public class PedidoApplication {
 
         pedido.getItens().forEach(itemPedido -> {
             ProdutoDto produto = produtoQueryRequest.buscarProduto(itemPedido.getProdutoReferencia());
-            if (itemPedido.getQuantidade() <= produto.getQuantidadeEstoqueAtual() && itemPedido.getQuantidade() <= produto.getQuantidadeEstoqueReservado())
+            if (itemPedido.getQuantidade() <= produto.getQuantidadeEstoqueAtual() && !(produto.getQuantidadeEstoqueReservado() >= itemPedido.getQuantidade()))
                 return;
 
             throw new ValidationException("Pedido não pode ser feito porque falta itens no estoque");
