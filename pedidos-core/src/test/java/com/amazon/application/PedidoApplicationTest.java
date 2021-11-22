@@ -44,7 +44,7 @@ public class PedidoApplicationTest extends AppConfigTest {
 
         Pedido pedido = pedidoApplication.criarPedido(command);
 
-        Mockito.verify(rabbitTemplate, Mockito.times(1)).convertAndSend(ArgumentMatchers.anyString(), ArgumentMatchers.any(Pedido.class));
+        Mockito.verify(rabbitTemplate, Mockito.times(2)).convertAndSend(ArgumentMatchers.anyString(), ArgumentMatchers.any(Pedido.class));
         Assertions.assertNotNull(pedido.getId());
         Assertions.assertNotNull(pedido.getDataPedido());
         Assertions.assertEquals("meu-usuario", pedido.getUsuario());

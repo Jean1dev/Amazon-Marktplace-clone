@@ -1,9 +1,6 @@
 package com.amazon.pedido.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -16,6 +13,7 @@ import java.util.List;
 @Builder
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Pedido {
 
@@ -55,6 +53,13 @@ public class Pedido {
         this.pagamentoReferencia = pagamentoReferencia;
         this.itens = itens;
         this.valorTotal = this.calcularTotal();
+        preencherPedidoNosItens();
+    }
+
+    private void preencherPedidoNosItens() {
+        this.itens.forEach(itemPedido -> {
+            itemPedido.setPedido(this);
+        });
     }
 
     private BigDecimal calcularTotal() {
