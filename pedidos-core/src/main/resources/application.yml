@@ -23,3 +23,7 @@ spring:
     port: 5672
     username: guest
     password: guest
+
+apis:
+  produto_query: http://localhost:8080/produtos
+  produto_core: http://localhost:8081/produto

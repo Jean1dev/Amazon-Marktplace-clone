@@ -1,19 +1,18 @@
 package com.amazon.produto.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 @Builder
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Produto {
@@ -31,4 +30,9 @@ public class Produto {
 
     @NotEmpty
     private String imagemUrl;
+
+    @NotNull
+    private Integer quantidadeEstoqueAtual;
+
+    private Integer quantidadeEstoqueReservado;
 }

@@ -1,6 +1,7 @@
 package com.amazon.events;
 
 import com.amazon.application.ProdutoApplication;
+import com.amazon.events.event.ProdutoAlteradoEvent;
 import com.amazon.events.event.ProdutoCriadoEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -15,5 +16,10 @@ public class ProdutoListener {
     @RabbitListener(queues = "produto_queue")
     public void on(ProdutoCriadoEvent event) {
         application.onCreate(event);
+    }
+
+    @RabbitListener(queues = "produto_alterado_queue")
+    public void onChange(ProdutoAlteradoEvent event) {
+        application.onChange(event);
     }
 }

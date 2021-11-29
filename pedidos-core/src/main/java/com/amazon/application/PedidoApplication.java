@@ -1,6 +1,9 @@
 package com.amazon.application;
 
 import com.amazon.application.commands.CriarPedidoCommand;
+import com.amazon.http.ProdutoCoreRequest;
+import com.amazon.http.ProdutoQueryRequest;
+import com.amazon.http.dto.ProdutoDto;
 import com.amazon.pedido.model.ItemPedido;
 import com.amazon.pedido.model.Pedido;
 import com.amazon.pedido.model.PedidoRepository;
@@ -10,12 +13,12 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.amazon.config.AMQPConstants.GERAR_PAGAMENTO_QUEUE;
-import static com.amazon.config.AMQPConstants.PEDIDO_QUEUE;
+import static com.amazon.config.AMQPConstants.*;
 
 @Service
 @Transactional
@@ -25,6 +28,10 @@ public class PedidoApplication {
     private final PedidoRepository repository;
 
     private final RabbitTemplate rabbitTemplate;
+
+    private final ProdutoQueryRequest produtoQueryRequest;
+
+    private final ProdutoCoreRequest produtoCoreRequest;
 
     public Pedido criarPedido(CriarPedidoCommand command) {
         Pedido build = Pedido.builder()
@@ -52,6 +59,24 @@ public class PedidoApplication {
 
     private void enviarEventos(Pedido pedido) {
         rabbitTemplate.convertAndSend(PEDIDO_QUEUE, pedido);
+        rabbitTemplate.convertAndSend(PROCESSAMENTO_PEDIDO_QUEUE, pedido.getId());
+    }
+
+    public void processarPedido(String idPedido) {
+        Pedido pedido = repository.findById(idPedido).orElseThrow();
+
+        pedido.getItens().forEach(itemPedido -> {
+            ProdutoDto produto = produtoQueryRequest.buscarProduto(itemPedido.getProdutoReferencia());
+            if (itemPedido.getQuantidade() <= produto.getQuantidadeEstoqueAtual() && itemPedido.getQuantidade() <= produto.getQuantidadeEstoqueReservado())
+                return;
+
+            throw new ValidationException("Pedido não pode ser feito porque falta itens no estoque");
+        });
+
+        pedido.getItens().forEach(itemPedido -> {
+            produtoCoreRequest.solicitarReservaDeEstoque(itemPedido.getProdutoReferencia(), itemPedido.getQuantidade());
+        });
+
         rabbitTemplate.convertAndSend(GERAR_PAGAMENTO_QUEUE, pedido);
     }
 }

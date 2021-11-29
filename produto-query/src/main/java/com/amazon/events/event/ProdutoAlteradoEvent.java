@@ -1,20 +1,16 @@
-package com.amazon.produto.model;
+package com.amazon.events.event;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.math.BigDecimal;
 
-@Builder
-@Entity
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Produto {
+public class ProdutoAlteradoEvent {
 
-    @Id
     private String id;
     private String nome;
     private BigDecimal preco;
