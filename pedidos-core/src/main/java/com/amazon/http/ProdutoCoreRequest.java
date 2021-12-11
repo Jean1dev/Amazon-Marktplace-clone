@@ -32,4 +32,16 @@ public class ProdutoCoreRequest {
         HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(payload, null);
         restTemplate.exchange(uri, HttpMethod.POST, httpEntity, Object.class).getBody();
     }
+
+    public void solicitarBaixaDeEstoque(String id, Integer quantidade) {
+        String uri = UriComponentsBuilder.fromHttpUrl(BASE_URL)
+                .pathSegment("baixar-estoque")
+                .build()
+                .toUriString();
+
+        Map<String, Object> payload = Map.of("idProduto", id, "quantidade", quantidade);
+
+        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(payload, null);
+        restTemplate.exchange(uri, HttpMethod.POST, httpEntity, Object.class).getBody();
+    }
 }

@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(path = ProdutoApi.PATH)
 @RequiredArgsConstructor
@@ -20,7 +22,7 @@ public class ProdutoApi {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void criar(@RequestBody CriarProdutoDto dto) {
+    public void criar(@RequestBody @Valid CriarProdutoDto dto) {
         application.criarProduto(CriarProdutoCommand.builder()
                 .preco(dto.getPreco())
                 .nome(dto.getNome())

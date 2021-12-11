@@ -1,6 +1,7 @@
 package com.amazon.application;
 
 import com.amazon.application.commands.CriarPedidoCommand;
+import com.amazon.events.event.PagamentoRealizadoEvent;
 import com.amazon.http.ProdutoCoreRequest;
 import com.amazon.http.ProdutoQueryRequest;
 import com.amazon.http.dto.ProdutoDto;
@@ -78,5 +79,13 @@ public class PedidoApplication {
         });
 
         rabbitTemplate.convertAndSend(GERAR_PAGAMENTO_QUEUE, pedido);
+    }
+
+    public void processarPagamentoRealizado(PagamentoRealizadoEvent event) {
+        Pedido pedido = repository.findById(event.getIdPedido()).orElseThrow();
+
+        if (event.getSituacaoPagamento() == "PAGAMENTO_REALIZADO") {
+
+        }
     }
 }
