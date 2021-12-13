@@ -27,5 +27,6 @@ public final class CriarProdutoDto {
     @NotNull
     private Integer quantidadeEstoqueAtual;
 
+    @NotNull
     private Integer quantidadeEstoqueReservado;
 }
