@@ -49,4 +49,12 @@ public class ProdutoApplication {
         repository.save(produto);
         rabbitTemplate.convertAndSend(PRODUTO_ALTERADO_QUEUE, produto);
     }
+
+    public void baixarEstoque(SolicitarAlteracaoEstoqueReservaCommand command) {
+        Produto produto = repository.findById(command.getIdProduto()).orElseThrow();
+        produto.setQuantidadeEstoqueAtual(produto.getQuantidadeEstoqueAtual() - command.getQuantidade());
+        produto.setQuantidadeEstoqueReservado(produto.getQuantidadeEstoqueReservado() - command.getQuantidade());
+        repository.save(produto);
+        rabbitTemplate.convertAndSend(PRODUTO_ALTERADO_QUEUE, produto);
+    }
 }

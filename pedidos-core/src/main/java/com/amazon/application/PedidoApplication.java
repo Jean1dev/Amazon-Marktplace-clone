@@ -5,10 +5,7 @@ import com.amazon.events.event.PagamentoRealizadoEvent;
 import com.amazon.http.ProdutoCoreRequest;
 import com.amazon.http.ProdutoQueryRequest;
 import com.amazon.http.dto.ProdutoDto;
-import com.amazon.pedido.model.ItemPedido;
-import com.amazon.pedido.model.Pedido;
-import com.amazon.pedido.model.PedidoRepository;
-import com.amazon.pedido.model.SituacaoPedido;
+import com.amazon.pedido.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
@@ -68,7 +65,7 @@ public class PedidoApplication {
 
         pedido.getItens().forEach(itemPedido -> {
             ProdutoDto produto = produtoQueryRequest.buscarProduto(itemPedido.getProdutoReferencia());
-            if (itemPedido.getQuantidade() <= produto.getQuantidadeEstoqueAtual() && !(produto.getQuantidadeEstoqueReservado() >= itemPedido.getQuantidade()))
+            if (itemPedido.getQuantidade() <= produto.getQuantidadeEstoqueAtual() && produto.getQuantidadeEstoqueReservado() <= produto.getQuantidadeEstoqueAtual())
                 return;
 
             throw new ValidationException("Pedido não pode ser feito porque falta itens no estoque");
@@ -84,8 +81,15 @@ public class PedidoApplication {
     public void processarPagamentoRealizado(PagamentoRealizadoEvent event) {
         Pedido pedido = repository.findById(event.getIdPedido()).orElseThrow();
 
-        if (event.getSituacaoPagamento() == "PAGAMENTO_REALIZADO") {
+        if (event.getSituacaoPagamento().equals(SituacaoPagamento.PAGAMENTO_REALIZADO.toString())) {
+            pedido.setSituacaoPedido(SituacaoPedido.PEDIDO_CONCLUIDO);
+            pedido.setPagamentoReferencia("Pagamento Realizado " + event.getDataPagamento());
+            pedido.getItens().forEach(itemPedido -> {
+                produtoCoreRequest.solicitarBaixaDeEstoque(itemPedido.getProdutoReferencia(), itemPedido.getQuantidade());
+            });
 
+            repository.save(pedido);
+            rabbitTemplate.convertAndSend(PEDIDO_QUEUE, pedido);
         }
     }
 }

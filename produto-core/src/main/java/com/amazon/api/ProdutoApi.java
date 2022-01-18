@@ -40,4 +40,13 @@ public class ProdutoApi {
                 .quantidadeReservaEstoque(dto.getQuantidadeReservaEstoque())
                 .build());
     }
+
+    @PostMapping(path = "baixar-estoque")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void baixarEstoque(@RequestBody SolicitarAlteracaoEstoqueReservaDto dto) {
+        application.baixarEstoque(SolicitarAlteracaoEstoqueReservaCommand.builder()
+                .idProduto(dto.getIdProduto())
+                .quantidade(dto.getQuantidade())
+                .build());
+    }
 }

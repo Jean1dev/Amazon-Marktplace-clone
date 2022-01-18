@@ -14,4 +14,6 @@ public class SolicitarAlteracaoEstoqueReservaCommand {
     private String idProduto;
 
     private Integer quantidadeReservaEstoque;
+
+    private Integer quantidade;
 }
