@@ -22,7 +22,7 @@ public class ProdutoCoreRequest {
     }
 
     public void solicitarReservaDeEstoque(String id, Integer quantidadeReservaEstoque) {
-        String uri = UriComponentsBuilder.fromHttpUrl(BASE_URL)
+        String uri = UriComponentsBuilder.fromUriString(BASE_URL)
                 .pathSegment("reservar-estoque")
                 .build()
                 .toUriString();
@@ -34,7 +34,7 @@ public class ProdutoCoreRequest {
     }
 
     public void solicitarBaixaDeEstoque(String id, Integer quantidade) {
-        String uri = UriComponentsBuilder.fromHttpUrl(BASE_URL)
+        String uri = UriComponentsBuilder.fromUriString(BASE_URL)
                 .pathSegment("baixar-estoque")
                 .build()
                 .toUriString();

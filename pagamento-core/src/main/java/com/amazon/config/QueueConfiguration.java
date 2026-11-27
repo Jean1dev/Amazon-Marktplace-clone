@@ -7,6 +7,7 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static com.amazon.config.AMQPConstants.GERAR_PAGAMENTO_QUEUE;
 import static com.amazon.config.AMQPConstants.PAGAMENTO_PROCESSADO_QUEUE;
 
 @Configuration
@@ -20,8 +21,20 @@ public class QueueConfiguration {
     }
 
     @Bean
+    public Queue gerarPagamentoQ() {
+        return new Queue(GERAR_PAGAMENTO_QUEUE, true, false, false);
+    }
+
+    @Bean
     public Queue pagamentoConcluidoQ() {
         return new Queue(PAGAMENTO_PROCESSADO_QUEUE, true, false, false);
+    }
+
+    @Bean
+    public Binding gerarPagamento(DirectExchange exchange) {
+        return BindingBuilder.bind(gerarPagamentoQ())
+                .to(exchange)
+                .with(GERAR_PAGAMENTO_QUEUE);
     }
 
     @Bean

@@ -21,7 +21,7 @@ public class ProdutoQueryRequest {
     }
 
     public ProdutoDto buscarProduto(String id) {
-        String uri = UriComponentsBuilder.fromHttpUrl(BASE_URL)
+        String uri = UriComponentsBuilder.fromUriString(BASE_URL)
                 .pathSegment(id)
                 .build()
                 .toUriString();
