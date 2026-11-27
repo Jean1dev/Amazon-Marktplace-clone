@@ -32,6 +32,7 @@ public class ProdutoApiTest extends AppConfigTest {
                 .nome("nome")
                 .preco(BigDecimal.ONE)
                 .quantidadeEstoqueAtual(1)
+                .quantidadeEstoqueReservado(0)
                 .build();
 
         String dtoAsJson = new ObjectMapper().writeValueAsString(dto);

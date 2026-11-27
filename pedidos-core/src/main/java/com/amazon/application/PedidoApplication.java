@@ -11,7 +11,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.ValidationException;
+import jakarta.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -65,7 +65,8 @@ public class PedidoApplication {
 
         pedido.getItens().forEach(itemPedido -> {
             ProdutoDto produto = produtoQueryRequest.buscarProduto(itemPedido.getProdutoReferencia());
-            if (itemPedido.getQuantidade() <= produto.getQuantidadeEstoqueAtual() && produto.getQuantidadeEstoqueReservado() <= produto.getQuantidadeEstoqueAtual())
+            int estoqueDisponivel = produto.getQuantidadeEstoqueAtual() - produto.getQuantidadeEstoqueReservado();
+            if (itemPedido.getQuantidade() <= estoqueDisponivel)
                 return;
 
             throw new ValidationException("Pedido não pode ser feito porque falta itens no estoque");

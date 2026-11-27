@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -25,7 +25,7 @@ public class ProdutoApplicationTest extends AppConfigTest {
     @Autowired
     private ProdutoApplication produtoApplication;
 
-    @MockBean
+    @MockitoBean
     private RabbitTemplate rabbitTemplate;
 
     @Autowired
